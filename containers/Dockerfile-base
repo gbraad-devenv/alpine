@@ -20,7 +20,11 @@ RUN apk add \
 RUN apk add \
         python3 \
         py3-pip \
-    && pip install --user git+https://github.com/powerline/powerline
+    && pip install git+https://github.com/powerline/powerline \
+    && mkdir -p /usr/share/tmux \
+    && ln -s /usr/lib/python3.11/site-packages/powerline/bindings/tmux/powerline.conf /usr/share/tmux/powerline.conf \
+    && mkdir -p  /usr/share/powerline/zsh \
+    && ln -s /usr/lib/python3.11/site-packages/powerline/bindings/zsh/powerline.zsh /usr/share/powerline/zsh/powerline.zsh
 
 COPY scripts/tailscaled /etc/init.d/tailscaled
 RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
