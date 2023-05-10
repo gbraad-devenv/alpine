@@ -1,0 +1,32 @@
+FROM alpine:3.18
+
+RUN apk add \
+        bash \
+        git \
+        sudo \
+        openssh-client \
+        openssh-server \
+        curl \
+        stow \
+        zsh \
+        screen \
+        tmux
+
+RUN curl -sSL https://raw.githubusercontent.com/gbraad/dotfiles/master/install.sh | sh
+
+RUN apk add \
+        tailscale
+
+RUN apk add \
+        python3 \
+        py3-pip \
+    && pip install --user git+https://github.com/powerline/powerline
+
+COPY scripts/tailscaled /etc/init.d/tailscaled
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
+# Add user with the expected ID (automated setup does not work atm)
+RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel \
+    && adduser -u 1000 -G wheel -h /home/gbraad -s /usr/bin/zsh -D gbraad
+
+USER gbraad
