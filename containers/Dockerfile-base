@@ -31,6 +31,6 @@ RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
 
 # Add user with the expected ID (automated setup does not work atm)
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel \
-    && adduser -u 1000 -G wheel -h /home/gbraad -s /usr/bin/zsh -D gbraad
+    && adduser -u 1000 -G wheel -h /home/gbraad -s /bin/zsh -D gbraad
 
 USER gbraad

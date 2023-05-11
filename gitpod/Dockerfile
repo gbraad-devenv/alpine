@@ -14,4 +14,7 @@ RUN apk add \
     libstdc++ \
     libgcc
 
+RUN apk add \
+    docker
+
 USER gitpod
