@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # clean workspace folder
-#rm -rf /workspace/debian
-#mkdir /workspace/debian
-#ln -s /workspace/debian ~/Projects
-#git init /workspace/debian
-#
-#cd ~
+rm -rf /workspace/alpine
+mkdir /workspace/alpine
+ln -s /workspace/alpine ~/Projects
+git init /workspace/alpine
+
+cd ~
 
 exit 0
