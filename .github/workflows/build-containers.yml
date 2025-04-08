@@ -1,0 +1,52 @@
+name: build containers
+run-name: building containers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build-containers    
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Run podman build - base
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/alpine/rebase:3.21 \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-dotfiles/alpine" \
+            --build-arg=BASE_VERSION="3.21" \
+            -f containers/Containerfile-rebase .
+      - name: Run podman build - dotfiles
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/alpine/dotfiles:3.21 \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-devenv/alpine/rebase" \
+            --build-arg=BASE_VERSION="3.21" \
+            -f containers/Containerfile-dotfiles .
+      - name: Run podman build - system
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/alpine/system:3.21 \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-devenv/alpine/dotfiles" \
+            --build-arg=BASE_VERSION="3.21" \
+            -f containers/Containerfile-system .
+
+      - name: Login to ghcr.io
+        run: |
+          podman login ghcr.io -u ${{ github.actor }} \
+            -p ${{ secrets.GITHUB_TOKEN }}
+      - name: Push image to ghcr.io - dotfiles
+        run: |
+          podman push ghcr.io/gbraad-devenv/alpine/dotfiles:3.21
+      - name: Push image to ghcr.io - system
+        run: |
+          podman push ghcr.io/gbraad-devenv/alpine/system:3.21

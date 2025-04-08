@@ -1,0 +1,9 @@
+ARG BASE_IMAGE="ghcr.io/gbraad-dotfiles/alpine"
+ARG BASE_VERSION="3.21"
+
+FROM ${BASE_IMAGE}:${BASE_VERSION}
+
+USER root
+
+COPY scripts/tailscaled /etc/init.d/tailscaled
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale

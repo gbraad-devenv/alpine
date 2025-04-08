@@ -1,0 +1,5 @@
+FROM ghcr.io/gbraad-devenv/alpine/rebase:3.21
+
+USER gbraad
+
+ENTRYPOINT [ "/bin/zsh" ]
